@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Motherhood Agenda</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--black:#111;--white:#fff;--gray:#888;--light:#f5f5f5;--border:#ddd;--serif:'Times New Roman',serif;--sans:'DM Sans',sans-serif}
+body{font-family:var(--sans);background:var(--white);color:var(--black);min-height:100vh;-webkit-font-smoothing:antialiased}
+.app{max-width:430px;margin:0 auto;min-height:100vh;background:var(--white);position:relative}
+
+/* ===================== LOGIN ===================== */
+#loginScreen{background:var(--black);min-height:100vh;display:flex;flex-direction:column;padding:60px 36px 48px;position:relative}
+.login-logo{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-bottom:24px}
+.login-logo-icon{width:80px;height:80px;object-fit:contain;margin-bottom:24px}
+.login-brand-my,.login-brand-motherhood{font-family:var(--serif);font-size:26px;color:var(--white);letter-spacing:5px;text-transform:uppercase;text-align:center;display:block;line-height:1.2}
+.login-brand-agenda{font-family:var(--serif);font-size:30px;font-style:italic;color:var(--white);letter-spacing:3px;text-transform:uppercase;text-align:center;display:block;line-height:1.3}
+.login-form{width:100%}
+.login-input{width:100%;background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,0.2);padding:13px 0;font-size:13px;color:var(--white);font-family:var(--serif);letter-spacing:0.5px;outline:none;margin-bottom:16px;transition:border-color 0.2s}
+.login-input::placeholder{color:rgba(255,255,255,0.3);font-size:11px;text-transform:uppercase;letter-spacing:1.5px;font-family:var(--sans)}
+.login-input:focus{border-bottom-color:var(--white)}
+.login-btn{width:100%;background:var(--white);color:var(--black);border:none;padding:15px;font-size:11px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;margin-top:6px;font-family:var(--sans);transition:opacity 0.15s}
+.login-btn:hover{opacity:0.88}
+.login-forgot{text-align:center;margin-top:14px;font-size:11px;color:rgba(255,255,255,0.3);letter-spacing:1px;cursor:pointer;text-transform:uppercase;font-family:var(--sans)}
+.login-divider{display:flex;align-items:center;gap:12px;margin:20px 0}
+.login-divider-line{flex:1;height:0.5px;background:rgba(255,255,255,0.1)}
+.login-divider-text{font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px;text-transform:uppercase}
+.login-create{width:100%;background:transparent;color:var(--white);border:1px solid rgba(255,255,255,0.2);padding:13px;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-family:var(--sans);transition:border-color 0.15s}
+.login-create:hover{border-color:var(--white)}
+.login-tagline{text-align:center;margin-top:24px;font-family:var(--serif);font-style:italic;font-size:11px;color:rgba(255,255,255,0.18);letter-spacing:0.5px}
+
+/* ===================== MAIN APP ===================== */
+#mainApp{display:none}
+.header{background:var(--white);padding:14px 20px 10px;border-bottom:1px solid var(--black);position:sticky;top:0;z-index:100}
+.header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.brand{font-family:var(--serif);font-size:16px;color:var(--black);letter-spacing:0.5px;text-transform:uppercase}
+.brand em{font-style:italic;font-size:18px}
+.header-right{display:flex;align-items:center;gap:10px}
+.user-email{font-size:10px;color:var(--gray);letter-spacing:0.3px}
+.logout-btn{font-size:10px;color:var(--black);background:none;border:1px solid var(--black);padding:3px 8px;cursor:pointer;font-family:var(--sans);letter-spacing:0.5px;text-transform:uppercase}
+.date-strip{display:flex;gap:5px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.date-strip::-webkit-scrollbar{display:none}
+.date-chip{flex-shrink:0;width:40px;height:52px;border-radius:3px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;border:1px solid var(--border);transition:all 0.15s}
+.date-chip.active{background:var(--black);border-color:var(--black)}
+.date-chip.active .dn,.date-chip.active .dd{color:var(--white)}
+.dn{font-size:9px;text-transform:uppercase;letter-spacing:0.5px;color:var(--gray)}
+.dd{font-size:15px;font-weight:500;color:var(--black);font-family:var(--serif)}
+.nav{display:flex;background:var(--white);border-bottom:1px solid var(--black);padding:0 10px;overflow-x:auto;scrollbar-width:none;position:sticky;top:88px;z-index:99}
+.nav::-webkit-scrollbar{display:none}
+.nav-tab{flex-shrink:0;padding:9px 8px;font-size:10px;color:var(--gray);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.15s;letter-spacing:0.8px;text-transform:uppercase;font-family:var(--serif);font-style:italic}
+.nav-tab.active{color:var(--black);border-bottom-color:var(--black)}
+.content{padding:18px 20px 90px;min-height:calc(100vh - 140px)}
+
+/* ===================== PAYWALL ===================== */
+#paywallScreen{display:none;position:fixed;inset:0;background:var(--white);z-index:200;max-width:430px;margin:0 auto;padding:48px 32px;flex-direction:column;align-items:center;justify-content:center}
+.paywall-logo{font-family:var(--serif);font-size:20px;text-transform:uppercase;letter-spacing:3px;text-align:center;margin-bottom:6px}
+.paywall-logo em{font-style:italic}
+.paywall-subtitle{font-family:var(--serif);font-style:italic;font-size:13px;color:var(--gray);text-align:center;margin-bottom:32px}
+.paywall-free{border:1px solid var(--border);padding:16px;margin-bottom:10px;width:100%}
+.paywall-paid{border:1px solid var(--black);padding:16px;margin-bottom:10px;width:100%;position:relative}
+.paywall-badge{position:absolute;top:-10px;right:12px;background:var(--black);color:var(--white);font-size:9px;padding:2px 8px;letter-spacing:1px;text-transform:uppercase;font-family:var(--sans)}
+.paywall-plan-name{font-family:var(--serif);font-size:15px;font-weight:500;margin-bottom:4px}
+.paywall-plan-price{font-size:22px;font-family:var(--serif);margin-bottom:8px}
+.paywall-plan-price span{font-size:13px;color:var(--gray)}
+.paywall-plan-features{font-size:12px;color:var(--gray);line-height:1.8}
+.paywall-plan-features li{list-style:none;padding-left:14px;position:relative}
+.paywall-plan-features li::before{content:'—';position:absolute;left:0;color:var(--black)}
+.paywall-cta{width:100%;background:var(--black);color:var(--white);border:none;padding:15px;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-family:var(--sans);margin-top:8px}
+.paywall-free-cta{width:100%;background:transparent;color:var(--black);border:1px solid var(--border);padding:13px;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-family:var(--sans);margin-top:4px}
+.paywall-toggle{display:flex;gap:12px;margin-bottom:24px;border:1px solid var(--border);padding:4px}
+.paywall-toggle-btn{flex:1;padding:8px;font-size:11px;text-transform:uppercase;letter-spacing:1px;cursor:pointer;border:none;background:transparent;font-family:var(--sans);transition:all 0.15s}
+.paywall-toggle-btn.active{background:var(--black);color:var(--white)}
+
+/* ===================== SHARED COMPONENTS ===================== */
+.section-label{font-family:var(--serif);font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--black);margin-bottom:10px;padding-bottom:6px;border-bottom:0.5px solid var(--border)}
+.divider{height:0.5px;background:var(--border);margin:16px 0}
+.quote{font-family:var(--serif);font-style:italic;font-size:12px;color:var(--black);text-align:center;padding:14px 10px;border-top:1px solid var(--black);border-bottom:1px solid var(--black);margin:16px 0;line-height:1.7}
+.input-line{width:100%;border:none;border-bottom:0.5px solid var(--border);padding:6px 0;font-size:13px;font-family:var(--serif);color:var(--black);outline:none;background:transparent;resize:none}
+.input-line:focus{border-bottom-color:var(--black)}
+.input-line::placeholder{color:#ccc;font-style:italic}
+
+/* HOME */
+.home-date{font-family:var(--serif);font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.home-greeting{font-family:var(--serif);font-size:24px;font-style:italic;color:var(--black);margin-bottom:2px;line-height:1.2}
+.home-quote-hero{border:1px solid var(--black);padding:16px;margin:14px 0;font-family:var(--serif);font-style:italic;font-size:14px;color:var(--black);line-height:1.7;text-align:center}
+.home-card{border:1px solid var(--border);padding:12px 14px;margin-bottom:8px}
+.home-card-title{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--gray);margin-bottom:8px}
+.home-priority{display:flex;gap:10px;align-items:center;padding:4px 0;border-bottom:0.5px solid var(--light)}
+.home-priority:last-child{border-bottom:none}
+.home-p-num{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--border);width:16px}
+.home-p-text{font-size:12px;color:var(--black);font-family:var(--serif)}
+.home-prog-row{display:flex;justify-content:space-between;margin-bottom:3px}
+.home-prog-label{font-size:11px;color:var(--black)}
+.home-prog-pct{font-size:10px;color:var(--gray)}
+.home-prog-bar{height:2px;background:var(--light);margin-bottom:8px}
+.home-prog-fill{height:100%;background:var(--black)}
+.home-quick{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.home-quick-item{border:1px solid var(--border);padding:10px;text-align:center;cursor:pointer}
+.home-quick-item:hover{border-color:var(--black)}
+.home-quick-num{font-family:var(--serif);font-size:22px;color:var(--black)}
+.home-quick-label{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--gray);margin-top:2px}
+.home-one-thing{border:1px solid var(--black);padding:12px 14px;margin-top:8px}
+.home-ot-label{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--gray);margin-bottom:4px}
+
+/* DAILY */
+.time-block{display:flex;gap:10px;margin-bottom:2px;align-items:flex-start}
+.time-label{font-size:10px;color:#bbb;width:36px;flex-shrink:0;padding-top:8px;font-family:var(--serif)}
+.block-input{flex:1;border:none;border-bottom:0.5px solid #f0f0f0;padding:6px 0;font-size:13px;font-family:var(--serif);color:var(--black);outline:none;background:transparent;min-height:30px}
+.block-input:focus{border-bottom-color:var(--black)}
+.block-input::placeholder{color:#ddd;font-style:italic}
+.priority-num{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--border);width:20px;flex-shrink:0;padding-top:6px}
+.priority-row{display:flex;gap:10px;align-items:flex-start;border-bottom:0.5px solid var(--border);padding:4px 0}
+.one-thing-row{padding:8px 0;border-bottom:0.5px solid var(--border)}
+.ot-label{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--gray);margin-bottom:3px}
+
+/* CHECKLIST */
+.check-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.check-item{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:0.5px solid #f8f8f8;cursor:pointer;user-select:none}
+.check-box{width:13px;height:13px;border:1px solid var(--black);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
+.check-item.done .check-box{background:var(--black)}
+.check-mark{display:none;color:var(--white);font-size:8px}
+.check-item.done .check-mark{display:block}
+.check-item.done .check-text{color:var(--border);text-decoration:line-through}
+.check-text{font-size:12px;color:var(--black)}
+.check-list{display:flex;flex-direction:column}
+.check-list .check-item{grid-column:span 2}
+
+/* SELF CARE / MOVEMENT */
+.sc-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:0.5px solid var(--border);cursor:pointer;user-select:none}
+.sc-box{width:14px;height:14px;border:1px solid var(--black);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;color:transparent;transition:all 0.15s}
+.sc-row.done .sc-box{background:var(--black);color:var(--white)}
+.sc-row.done .sc-label{color:var(--border);text-decoration:line-through}
+.sc-label{font-size:13px;color:var(--black);font-family:var(--serif)}
+.sc-add{display:flex;align-items:center;gap:8px;padding:7px 0;cursor:pointer}
+.sc-add-text{font-size:11px;color:var(--gray);font-style:italic;font-family:var(--serif)}
+
+/* AFFIRMATION */
+.affirmation-box{border:1px solid var(--black);padding:12px;font-family:var(--serif);font-style:italic;font-size:14px;color:var(--black);line-height:1.6;width:100%;background:transparent;outline:none;resize:none;min-height:60px}
+
+/* WEEKLY */
+.week-row{display:grid;grid-template-columns:44px 1fr;border-bottom:0.5px solid var(--border);padding:6px 0;gap:8px;align-items:start}
+.week-day-label{font-family:var(--serif);font-size:12px;font-weight:bold;color:var(--black);text-transform:uppercase;letter-spacing:0.5px;padding-top:4px}
+.week-day-date{font-size:10px;color:var(--gray)}
+.goals-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.goal-card{border:1px solid var(--border);padding:10px}
+.goal-cat{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--gray);margin-bottom:4px}
+
+/* MONTHLY */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);border:1px solid var(--black)}
+.cal-header{font-size:9px;text-transform:uppercase;color:var(--white);background:var(--black);text-align:center;padding:5px 0}
+.cal-cell{border:0.5px solid var(--border);min-height:34px;padding:3px;font-size:11px;cursor:pointer;position:relative}
+.cal-cell.today{background:var(--black);color:var(--white)}
+.cal-cell.today .cal-date{color:var(--white)}
+.cal-cell.has-note::after{content:'';position:absolute;bottom:3px;right:3px;width:4px;height:4px;border-radius:50%;background:var(--black)}
+.cal-cell.today.has-note::after{background:var(--white)}
+.cal-date{font-size:11px;font-weight:500;font-family:var(--serif)}
+.reminder-item{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:0.5px solid var(--border);cursor:pointer;user-select:none}
+.reminder-check{width:13px;height:13px;border:1px solid var(--black);flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.reminder-item.done .reminder-check{background:var(--black)}
+.r-mark{display:none;color:var(--white);font-size:8px}
+.reminder-item.done .r-mark{display:block}
+.reminder-item.done .reminder-text{color:var(--border);text-decoration:line-through}
+.reminder-text{font-size:12px;color:var(--black);font-family:var(--serif)}
+
+/* MEALS */
+.meal-table{width:100%;border-collapse:collapse;font-size:11px}
+.meal-table th{font-size:9px;text-transform:uppercase;letter-spacing:0.5px;color:var(--white);background:var(--black);padding:5px 4px;text-align:center;border-right:0.5px solid #333}
+.meal-table td.day-cell{font-family:var(--serif);font-style:italic;font-size:12px;color:var(--black);padding:4px;border-bottom:0.5px solid var(--border);border-right:0.5px solid var(--border);background:#fafafa;white-space:nowrap}
+.meal-table td.meal-cell{border-bottom:0.5px solid var(--border);border-right:0.5px solid var(--border);padding:2px}
+.meal-input{width:100%;border:none;outline:none;font-size:11px;font-family:var(--serif);color:var(--black);background:transparent;padding:3px 4px;min-height:26px}
+.meal-input::placeholder{color:#ccc;font-style:italic}
+.grocery-legend{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.legend-badge{font-size:10px;border:1px solid var(--black);padding:2px 6px;color:var(--black);font-family:var(--serif)}
+.grocery-list{display:flex;flex-direction:column;gap:0}
+.grocery-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:0.5px solid #f5f5f5}
+.grocery-check-box{width:12px;height:12px;border:1px solid var(--black);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.grocery-item.checked .grocery-check-box{background:var(--black)}
+.grocery-item.checked .grocery-check-mark{display:block}
+.grocery-check-mark{display:none;color:var(--white);font-size:7px}
+.grocery-item.checked .grocery-item-text{text-decoration:line-through;color:var(--border)}
+.grocery-item-text{font-size:12px;color:var(--black);flex:1;font-family:var(--serif)}
+.grocery-item-cat{font-size:9px;color:var(--gray);margin-left:4px}
+.grocery-item-del{font-size:14px;color:#ccc;cursor:pointer;padding:0 4px;background:none;border:none}
+.grocery-item-del:hover{color:var(--black)}
+.add-grocery-row{display:flex;gap:8px;margin-top:8px;align-items:center}
+.add-grocery-input{flex:1;border:none;border-bottom:1px solid var(--border);padding:6px 0;font-size:12px;font-family:var(--serif);outline:none;background:transparent}
+.add-grocery-input::placeholder{color:#ccc;font-style:italic}
+.add-grocery-cat{border:1px solid var(--border);padding:5px 6px;font-size:10px;font-family:var(--serif);outline:none;background:transparent;color:var(--black)}
+.add-grocery-btn{background:var(--black);color:var(--white);border:none;padding:6px 12px;font-size:11px;cursor:pointer;font-family:var(--sans);letter-spacing:1px}
+
+/* REFLECTIONS */
+.refl-label{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--gray);margin-bottom:5px;margin-top:12px;font-family:var(--sans)}
+.refl-textarea{width:100%;border:none;border-bottom:0.5px solid var(--border);padding:6px 0;font-size:13px;font-family:var(--serif);color:var(--black);outline:none;background:transparent;resize:none;min-height:26px;line-height:1.6}
+.refl-textarea:focus{border-bottom-color:var(--black)}
+.refl-textarea::placeholder{color:#ccc;font-style:italic}
+.iam-row{display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:0.5px solid var(--border)}
+.iam-label{font-family:var(--serif);font-style:italic;font-size:12px;color:var(--gray);width:110px;flex-shrink:0}
+
+/* MORE */
+.vision-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.vision-cell{border:1px solid var(--border);height:80px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;color:#ccc;font-family:var(--serif);font-style:italic;overflow:hidden;position:relative}
+.vision-cell:hover{border-color:var(--black)}
+.vision-cell input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.vision-cell img{width:100%;height:100%;object-fit:cover}
+.bucket-item{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:0.5px solid var(--border)}
+.bucket-num{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--border);width:18px;text-align:right;flex-shrink:0}
+.bucket-check{width:13px;height:13px;border:1px solid var(--black);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.bucket-item.done .bucket-check{background:var(--black)}
+.bucket-item.done .bucket-check-mark{display:block}
+.bucket-check-mark{display:none;color:var(--white);font-size:8px}
+.bucket-item.done .bucket-input{text-decoration:line-through;color:var(--border)}
+.bucket-input{flex:1;border:none;border-bottom:0.5px solid transparent;padding:2px 0;font-size:13px;font-family:var(--serif);color:var(--black);outline:none;background:transparent}
+.bucket-input:focus{border-bottom-color:var(--border)}
+.bucket-input::placeholder{color:#ddd;font-style:italic}
+
+/* FAB */
+.fab{position:fixed;bottom:24px;left:50%;transform:translateX(calc(-215px + 100%));width:46px;height:46px;background:var(--black);color:var(--white);font-size:22px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:50;box-shadow:0 2px 12px rgba(0,0,0,0.2)}
+@media(max-width:430px){.fab{right:20px;left:auto;transform:none}}
+
+.hidden{display:none!important}
+.lock-overlay{position:absolute;inset:0;background:rgba(255,255,255,0.85);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;z-index:10}
+.lock-icon{font-size:28px}
+.lock-text{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--black);text-align:center;max-width:200px;line-height:1.5}
+.lock-btn{background:var(--black);color:var(--white);border:none;padding:10px 20px;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-family:var(--sans);margin-top:4px}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ========== LOGIN SCREEN ========== -->
+<div id="loginScreen">
+  <div class="login-logo">
+    <div style="width:80px;height:80px;margin-bottom:24px;display:flex;align-items:center;justify-content:center">
+      <svg viewBox="0 0 100 100" width="80" height="80" xmlns="http://www.w3.org/2000/svg">
+        <rect width="100" height="100" fill="none"/>
+        <path d="M20 100V48C20 27 33 12 50 12C67 12 80 27 80 48V100Z" fill="white"/>
+        <ellipse cx="55" cy="30" rx="6" ry="6" fill="#111"/>
+        <path d="M47 55V40C47 37 50 34 55 34C60 34 63 37 63 40V55Z" fill="#111"/>
+        <ellipse cx="36" cy="36" rx="4.5" ry="4.5" fill="#111"/>
+        <path d="M30 55V44C30 42 32.5 40 36 40C39.5 40 42 42 42 44V55Z" fill="#111"/>
+        <path d="M33 30C33 27.5 34.5 25 36.5 26C38.5 25 40 27.5 40 30C40 32.5 36.5 36 36.5 36C36.5 36 33 32.5 33 30Z" fill="#111"/>
+        <line x1="36.5" y1="36" x2="36.5" y2="40" stroke="#111" stroke-width="1.5"/>
+        <path d="M33 27C33 24.5 34.5 23 36.5 24" stroke="#111" stroke-width="1" fill="none"/>
+        <line x1="50" y1="55" x2="48" y2="68" stroke="#111" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="60" y1="55" x2="62" y2="68" stroke="#111" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="32" y1="55" x2="30" y2="65" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="40" y1="55" x2="42" y2="65" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="43" y1="47" x2="47" y2="44" stroke="#111" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="login-brand-my">My</span>
+    <span class="login-brand-motherhood">Motherhood</span>
+    <span class="login-brand-agenda">Agenda</span>
+  </div>
+  <div class="login-form">
+    <input class="login-input" type="email" id="loginEmail" placeholder="Email">
+    <input class="login-input" type="password" id="loginPassword" placeholder="Password">
+    <button class="login-btn" onclick="handleLogin()">Sign In</button>
+    <div class="login-forgot">Forgot Password?</div>
+    <div class="login-divider"><div class="login-divider-line"></div><div class="login-divider-text">or</div><div class="login-divider-line"></div></div>
+    <button class="login-create" onclick="handleSignup()">Create Account</button>
+    <div class="login-tagline">Making Motherhood Manageable</div>
+  </div>
+</div>
+
+<!-- ========== PAYWALL ========== -->
+<div id="paywallScreen">
+  <div class="paywall-logo">My Motherhood <em>Agenda</em></div>
+  <div class="paywall-subtitle">Choose your plan to get started</div>
+  <div class="paywall-toggle">
+    <button class="paywall-toggle-btn" id="monthlyToggle" onclick="setPricing('monthly')">Monthly</button>
+    <button class="paywall-toggle-btn active" id="yearlyToggle" onclick="setPricing('yearly')">Yearly — Save 60%</button>
+  </div>
+  <div class="paywall-paid">
+    <div class="paywall-badge">Most Popular</div>
+    <div class="paywall-plan-name">Motherhood Collection</div>
+    <div class="paywall-plan-price" id="paidPrice">$29<span>/year</span></div>
+    <ul class="paywall-plan-features">
+      <li>Full daily agenda & schedule</li>
+      <li>Weekly & monthly views</li>
+      <li>Meal planner + grocery list</li>
+      <li>Habit & self care tracking</li>
+      <li>Reflections & vision board</li>
+      <li>Bucket list & goals</li>
+    </ul>
+    <button class="paywall-cta" onclick="handleSubscribe()">Get Full Access</button>
+  </div>
+  <div class="paywall-free">
+    <div class="paywall-plan-name">Free</div>
+    <div class="paywall-plan-price">$0<span>/forever</span></div>
+    <ul class="paywall-plan-features">
+      <li>Basic daily to-do list</li>
+    </ul>
+    <button class="paywall-free-cta" onclick="handleFree()">Continue Free</button>
+  </div>
+</div>
+
+<!-- ========== MAIN APP ========== -->
+<div id="mainApp">
+  <div class="header">
+    <div class="header-top">
+      <div class="brand">my motherhood <em>agenda</em></div>
+      <div class="header-right">
+        <span class="user-email" id="userEmailDisplay"></span>
+        <button class="logout-btn" onclick="handleLogout()">Log out</button>
+      </div>
+    </div>
+    <div class="date-strip" id="dateStrip"></div>
+  </div>
+
+  <div class="nav">
+    <div class="nav-tab active" onclick="switchTab('home',this)">Home</div>
+    <div class="nav-tab" onclick="switchTab('daily',this)">Daily</div>
+    <div class="nav-tab" onclick="switchTab('weekly',this)">Weekly</div>
+    <div class="nav-tab" onclick="switchTab('monthly',this)">Monthly</div>
+    <div class="nav-tab" onclick="checkPaid('meals',this)">Meals</div>
+    <div class="nav-tab" onclick="checkPaid('reflect',this)">Reflect</div>
+    <div class="nav-tab" onclick="checkPaid('more',this)">More</div>
+  </div>
+
+  <div class="content">
+
+    <!-- HOME -->
+    <div id="tab-home">
+      <div class="home-date" id="homeDate"></div>
+      <div class="home-greeting">Good morning, mom.</div>
+      <div class="home-quote-hero" id="dailyQuote"></div>
+      <div class="home-card">
+        <div class="home-card-title">Today's Top 3</div>
+        <div class="home-priority"><div class="home-p-num">1.</div><div class="home-p-text" id="hp1">—</div></div>
+        <div class="home-priority"><div class="home-p-num">2.</div><div class="home-p-text" id="hp2">—</div></div>
+        <div class="home-priority"><div class="home-p-num">3.</div><div class="home-p-text" id="hp3">—</div></div>
+      </div>
+      <div class="home-one-thing">
+        <div class="home-ot-label">One Thing To Do Today</div>
+        <div style="font-family:var(--serif);font-style:italic;font-size:14px;color:var(--black)" id="homeOneThing">—</div>
+      </div>
+      <div class="home-card" style="margin-top:8px">
+        <div class="home-card-title">Today's Progress</div>
+        <div class="home-prog-row"><span class="home-prog-label">Daily cleaning</span><span class="home-prog-pct" id="cleanPct">0%</span></div>
+        <div class="home-prog-bar"><div class="home-prog-fill" id="cleanBar" style="width:0%"></div></div>
+        <div class="home-prog-row"><span class="home-prog-label">Self care</span><span class="home-prog-pct" id="selfPct">0%</span></div>
+        <div class="home-prog-bar"><div class="home-prog-fill" id="selfBar" style="width:0%"></div></div>
+        <div class="home-prog-row"><span class="home-prog-label">Movement</span><span class="home-prog-pct" id="movPct">0%</span></div>
+        <div class="home-prog-bar" style="margin-bottom:0"><div class="home-prog-fill" id="movBar" style="width:0%"></div></div>
+      </div>
+      <div class="home-quick">
+        <div class="home-quick-item" onclick="switchTabDirect('daily')"><div class="home-quick-num" id="qTasks">0</div><div class="home-quick-label">Schedule blocks</div></div>
+        <div class="home-quick-item" onclick="checkPaidDirect('meals')"><div class="home-quick-num" id="qMeals">7</div><div class="home-quick-label">Meals planned</div></div>
+        <div class="home-quick-item" onclick="checkPaidDirect('reflect')"><div class="home-quick-num" id="qReflect">0</div><div class="home-quick-label">Reflections</div></div>
+        <div class="home-quick-item" onclick="checkPaidDirect('more')"><div class="home-quick-num" id="qBucket">0</div><div class="home-quick-label">Bucket list done</div></div>
+      </div>
+      <div class="quote">"Moms: mastering the art of doing it all."</div>
+    </div>
+
+    <!-- DAILY -->
+    <div id="tab-daily" class="hidden">
+      <div class="section-label">Schedule</div>
+      <div id="timeBlocks"></div>
+
+      <div class="divider"></div>
+      <div class="section-label">Top 3 Priorities</div>
+      <div class="priority-row"><div class="priority-num">1.</div><input class="input-line" id="p1" placeholder="Priority one..." oninput="updateHomePriorities()"></div>
+      <div class="priority-row"><div class="priority-num">2.</div><input class="input-line" id="p2" placeholder="Priority two..." oninput="updateHomePriorities()"></div>
+      <div class="priority-row"><div class="priority-num">3.</div><input class="input-line" id="p3" placeholder="Priority three..." oninput="updateHomePriorities()"></div>
+
+      <div class="divider"></div>
+      <div class="section-label">One Thing...</div>
+      <div class="one-thing-row"><div class="ot-label">To Do</div><input class="input-line" id="ot1" placeholder="The one thing..." oninput="updateHomeOneThing()"></div>
+      <div class="one-thing-row"><div class="ot-label">If There's Time</div><input class="input-line" id="ot2" placeholder="Nice to have..."></div>
+      <div class="one-thing-row"><div class="ot-label">Extra</div><input class="input-line" id="ot3" placeholder="Extra task..."></div>
+
+      <div class="divider"></div>
+      <div class="section-label">Daily Cleaning</div>
+      <div class="check-grid" id="dailyClean"></div>
+
+      <div class="divider"></div>
+      <div class="section-label">Self Care</div>
+      <div id="selfCareList"></div>
+
+      <div class="divider"></div>
+      <div class="section-label">Movement</div>
+      <div id="movementList"></div>
+
+      <div class="quote">"Not just a mom. A whole person. Don't forget that."</div>
+
+      <div class="section-label">Daily Affirmation</div>
+      <textarea class="affirmation-box" id="affirmation" placeholder="Write your affirmation for today..."></textarea>
+
+      <div class="divider"></div>
+      <div class="section-label">For Tomorrow</div>
+      <input class="input-line" placeholder="Prep note one..." style="margin-bottom:8px">
+      <input class="input-line" placeholder="Prep note two..." style="margin-bottom:8px">
+      <input class="input-line" placeholder="Prep note three...">
+
+      <div class="quote">"Rest is productive. You earned it."</div>
+    </div>
+
+    <!-- WEEKLY -->
+    <div id="tab-weekly" class="hidden">
+      <div class="section-label">Week At A Glance</div>
+      <div id="weekRows"></div>
+
+      <div class="divider"></div>
+      <div class="section-label">Goals</div>
+      <div class="goals-grid">
+        <div class="goal-card"><div class="goal-cat">Self</div><textarea class="refl-textarea" placeholder="Your goal..." rows="2"></textarea></div>
+        <div class="goal-card"><div class="goal-cat">Relationship</div><textarea class="refl-textarea" placeholder="Your goal..." rows="2"></textarea></div>
+        <div class="goal-card"><div class="goal-cat">Kids</div><textarea class="refl-textarea" placeholder="Your goal..." rows="2"></textarea></div>
+        <div class="goal-card"><div class="goal-cat">Other</div><textarea class="refl-textarea" placeholder="Your goal..." rows="2"></textarea></div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="section-label">Weekly Cleaning Schedule</div>
+      <div id="weeklyClean"></div>
+
+      <div class="divider"></div>
+      <div class="section-label">Weekly Reflections</div>
+      <div class="refl-label">Gratitude</div>
+      <textarea class="refl-textarea" placeholder="What are you grateful for this week?" rows="3"></textarea>
+      <div class="refl-label">Self-Care I Tried or Want to Try</div>
+      <textarea class="refl-textarea" placeholder="Self-care wins..." rows="2"></textarea>
+      <div class="refl-label">Let It Out</div>
+      <textarea class="refl-textarea" placeholder="Brain dump..." rows="3"></textarea>
+
+      <div class="quote">"The mental load is real. So is your strength."</div>
+    </div>
+
+    <!-- MONTHLY -->
+    <div id="tab-monthly" class="hidden">
+      <div class="section-label">Monthly Agenda — <span id="monthLabel"></span></div>
+      <div class="cal-grid" id="calGrid"></div>
+
+      <div id="calNoteBox" class="hidden" style="margin-top:10px;padding:10px;border:1px solid var(--black)">
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--gray);margin-bottom:6px" id="calNoteLabel">Note for Day</div>
+        <textarea class="refl-textarea" id="calNoteInput" placeholder="Add a note for this day..." rows="2"></textarea>
+      </div>
+
+      <div class="divider"></div>
+      <div class="section-label">To Do This Month</div>
+      <div id="monthlyTodos"></div>
+
+      <div class="divider"></div>
+      <div class="section-label">Monthly Goals</div>
+      <textarea class="refl-textarea" placeholder="Goal one..." rows="1" style="margin-bottom:6px"></textarea>
+      <textarea class="refl-textarea" placeholder="Goal two..." rows="1" style="margin-bottom:6px"></textarea>
+      <textarea class="refl-textarea" placeholder="Goal three..." rows="1"></textarea>
+
+      <div class="divider"></div>
+      <div class="section-label">Monthly Check In</div>
+      <textarea class="refl-textarea" placeholder="How is this month going?" rows="4"></textarea>
+
+      <div class="divider"></div>
+      <div class="section-label">Motherhood Reminders</div>
+      <div id="motherhoodReminders"></div>
+
+      <div class="divider"></div>
+      <div class="section-label">Monthly Cleaning</div>
+      <div class="check-grid" id="monthlyClean"></div>
+
+      <div class="quote">"Built different. Runs the whole show."</div>
+    </div>
+
+    <!-- MEALS (PAID) -->
+    <div id="tab-meals" class="hidden" style="position:relative">
+      <div class="section-label">Meal Agenda</div>
+      <div style="overflow-x:auto;margin-bottom:16px">
+        <table class="meal-table" id="mealTable"></table>
+      </div>
+
+      <div class="divider"></div>
+      <div class="section-label">Grocery List</div>
+      <div class="grocery-legend">
+        <div class="legend-badge">PR Produce</div>
+        <div class="legend-badge">F Frozen</div>
+        <div class="legend-badge">D Dairy</div>
+        <div class="legend-badge">M Meat</div>
+        <div class="legend-badge">PA Pantry</div>
+        <div class="legend-badge">B Bakery</div>
+      </div>
+      <div class="grocery-list" id="groceryList"></div>
+      <div class="add-grocery-row">
+        <input class="add-grocery-input" id="groceryInput" placeholder="Add item..." onkeypress="if(event.key==='Enter')addGrocery()">
+        <select class="add-grocery-cat" id="groceryCat">
+          <option>PR</option><option>F</option><option>D</option><option>M</option><option>PA</option><option>B</option>
+        </select>
+        <button class="add-grocery-btn" onclick="addGrocery()">Add</button>
+      </div>
+      <div class="quote">"Feeding a family every single day. Underrated superpower."</div>
+    </div>
+
+    <!-- REFLECTIONS (PAID) -->
+    <div id="tab-reflect" class="hidden" style="position:relative">
+      <div class="section-label">Daily Reflections</div>
+      <div class="refl-label">Gratitude</div>
+      <textarea class="refl-textarea" placeholder="Three things you're grateful for..." rows="3"></textarea>
+      <div class="refl-label">Self-Care I Tried or Want to Try</div>
+      <textarea class="refl-textarea" placeholder="Self-care wins today..." rows="2"></textarea>
+      <div class="refl-label">Brain Dump / Let It Out</div>
+      <textarea class="refl-textarea" placeholder="Get it all out here..." rows="4"></textarea>
+
+      <div style="margin-top:12px">
+        <div class="iam-row"><div class="iam-label">I am rocking at</div><input class="input-line" style="flex:1" placeholder="..."></div>
+        <div class="iam-row"><div class="iam-label">I am learning that</div><input class="input-line" style="flex:1" placeholder="..."></div>
+        <div class="iam-row"><div class="iam-label">I am grateful for</div><input class="input-line" style="flex:1" placeholder="..."></div>
+        <div class="iam-row"><div class="iam-label">I am proud of</div><input class="input-line" style="flex:1" placeholder="..."></div>
+        <div class="iam-row"><div class="iam-label">I smiled when</div><input class="input-line" style="flex:1" placeholder="..."></div>
+      </div>
+
+      <div class="quote">"Doing it all — and still standing. That's the job."</div>
+
+      <div class="section-label">Monthly Reflections</div>
+      <div class="refl-label">Milestones (You and/or Kids)</div>
+      <textarea class="refl-textarea" placeholder="Big moments this month..." rows="3"></textarea>
+      <div class="refl-label">Rediscovering Me</div>
+      <textarea class="refl-textarea" placeholder="Who am I becoming?" rows="2"></textarea>
+      <div class="refl-label">What brought me joy this month?</div>
+      <textarea class="refl-textarea" placeholder="Joy moments..." rows="2"></textarea>
+      <div class="refl-label">What has changed the most for me?</div>
+      <textarea class="refl-textarea" placeholder="Changes..." rows="2"></textarea>
+      <div class="refl-label">What does the best version of me look like now?</div>
+      <textarea class="refl-textarea" placeholder="Best version..." rows="2"></textarea>
+
+      <div class="quote">"Growth looks different for everyone. Yours counts."</div>
+
+      <div class="section-label" style="margin-top:16px">Start of Year</div>
+      <div class="refl-label">This Year I Want to Accomplish</div>
+      <textarea class="refl-textarea" placeholder="Goals for the year..." rows="3"></textarea>
+      <div class="refl-label">This Year I Hope to Learn</div>
+      <textarea class="refl-textarea" placeholder="What do you want to learn?" rows="2"></textarea>
+      <div class="refl-label">Memorable Moments to Look Forward To</div>
+      <textarea class="refl-textarea" placeholder="Exciting things ahead..." rows="3"></textarea>
+
+      <div class="quote">"New year. Same you — but sharper, clearer, more intentional."</div>
+
+      <div class="section-label" style="margin-top:16px">End of Year</div>
+      <div class="refl-label">This Year I Accomplished</div>
+      <textarea class="refl-textarea" placeholder="What did you achieve?" rows="3"></textarea>
+      <div class="refl-label">This Year I Learned</div>
+      <textarea class="refl-textarea" placeholder="Lessons learned..." rows="2"></textarea>
+      <div class="refl-label">This Year's Memorable Moments</div>
+      <textarea class="refl-textarea" placeholder="Moments to remember..." rows="3"></textarea>
+
+      <div class="quote">"You built something this year. Don't forget to notice."</div>
+    </div>
+
+    <!-- MORE (PAID) -->
+    <div id="tab-more" class="hidden" style="position:relative">
+      <div class="section-label">Vision Board</div>
+      <div style="font-family:var(--serif);font-style:italic;font-size:12px;color:var(--gray);margin-bottom:10px">Be specific. Be bold. This is yours.</div>
+      <div class="vision-grid" id="visionGrid"></div>
+      <div class="quote">"Know what you want. Write it down. Go get it."</div>
+
+      <div class="divider"></div>
+      <div class="section-label">Bucket List</div>
+      <div style="font-family:var(--serif);font-style:italic;font-size:12px;color:var(--gray);margin-bottom:10px">You're still you. Don't let motherhood make you forget that.</div>
+      <div id="bucketList"></div>
+      <div class="quote">"Moms: mastering the art of doing it all."</div>
+    </div>
+
+  </div>
+  <button class="fab" onclick="showFab()">+</button>
+</div>
+
+</div><!-- end .app -->
+
+<script>
+// ===================== STATE =====================
+let state = {
+  user: null,
+  isPaid: false,
+  pricingMode: 'yearly',
+  selectedCalDay: null,
+  calNotes: {},
+  groceries: [
+    {id:1,text:'Apples',cat:'PR',checked:false},
+    {id:2,text:'Chicken',cat:'M',checked:false},
+    {id:3,text:'Eggs',cat:'D',checked:false},
+    {id:4,text:'Milk',cat:'D',checked:false},
+    {id:5,text:'Bread',cat:'B',checked:false},
+    {id:6,text:'Spinach',cat:'PR',checked:false},
+  ],
+  groceryId: 7
+};
+
+const QUOTES = [
+  "She remembered who she was and the game changed.",
+  "Not just a mom. A whole person. Don't forget that.",
+  "The mental load is real. So is your strength.",
+  "Built different. Runs the whole show.",
+  "Rest is productive. You earned it.",
+  "Doing it all — and making it look easy.",
+  "Moms: mastering the art of doing it all.",
+  "Growth looks different for everyone. Yours counts.",
+  "New year. Same you — but sharper, clearer, more intentional.",
+  "You built something this year. Don't forget to notice."
+];
+
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const today = new Date();
+
+// ===================== LOGIN =====================
+function handleLogin() {
+  const email = document.getElementById('loginEmail').value;
+  const pass = document.getElementById('loginPassword').value;
+  if(!email || !pass) { alert('Please enter your email and password.'); return; }
+  state.user = { email };
+  showPaywall();
+}
+
+function handleSignup() {
+  const email = document.getElementById('loginEmail').value;
+  const pass = document.getElementById('loginPassword').value;
+  if(!email || !pass) { alert('Please enter an email and password to create your account.'); return; }
+  state.user = { email };
+  showPaywall();
+}
+
+function handleLogout() {
+  state.user = null;
+  state.isPaid = false;
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('mainApp').style.display = 'none';
+  document.getElementById('paywallScreen').style.display = 'none';
+}
+
+// ===================== PAYWALL =====================
+function showPaywall() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('paywallScreen').style.display = 'flex';
+  document.getElementById('paywallScreen').style.flexDirection = 'column';
+  document.getElementById('paywallScreen').style.alignItems = 'center';
+  document.getElementById('paywallScreen').style.justifyContent = 'center';
+}
+
+function setPricing(mode) {
+  state.pricingMode = mode;
+  document.getElementById('monthlyToggle').classList.toggle('active', mode==='monthly');
+  document.getElementById('yearlyToggle').classList.toggle('active', mode==='yearly');
+  document.getElementById('paidPrice').innerHTML = mode==='yearly' ? '$29<span>/year</span>' : '$7.99<span>/month</span>';
+}
+
+function handleSubscribe() {
+  state.isPaid = true;
+  launchApp();
+}
+
+function handleFree() {
+  state.isPaid = false;
+  launchApp();
+}
+
+function checkPaid(tab, el) {
+  if(state.isPaid) { switchTab(tab, el); }
+  else { showUpgradePrompt(); }
+}
+
+function checkPaidDirect(tab) {
+  if(state.isPaid) { switchTabDirect(tab); }
+  else { showUpgradePrompt(); }
+}
+
+function showUpgradePrompt() {
+  document.getElementById('paywallScreen').style.display = 'flex';
+  document.getElementById('paywallScreen').style.flexDirection = 'column';
+  document.getElementById('paywallScreen').style.alignItems = 'center';
+  document.getElementById('paywallScreen').style.justifyContent = 'center';
+  document.getElementById('mainApp').style.display = 'none';
+}
+
+// ===================== LAUNCH APP =====================
+function launchApp() {
+  document.getElementById('paywallScreen').style.display = 'none';
+  document.getElementById('mainApp').style.display = 'block';
+  document.getElementById('userEmailDisplay').textContent = state.user.email;
+  initApp();
+}
+
+function initApp() {
+  buildDateStrip();
+  buildTimeBlocks();
+  buildDailyClean();
+  buildSelfCare();
+  buildMovement();
+  buildWeekRows();
+  buildWeeklyClean();
+  buildCalendar();
+  buildMonthlyTodos();
+  buildReminders();
+  buildMonthlyClean();
+  buildMealTable();
+  buildGroceryList();
+  buildVisionGrid();
+  buildBucketList();
+  setHomeDate();
+  setDailyQuote();
+  document.getElementById('monthLabel').textContent = MONTHS[today.getMonth()]+' '+today.getFullYear();
+}
+
+// ===================== DATE STRIP =====================
+function buildDateStrip() {
+  const strip = document.getElementById('dateStrip');
+  strip.innerHTML = '';
+  for(let i=-2;i<=4;i++){
+    const d = new Date(today);
+    d.setDate(today.getDate()+i);
+    const chip = document.createElement('div');
+    chip.className = 'date-chip'+(i===0?' active':'');
+    chip.innerHTML = '<span class="dn">'+DAYS[d.getDay()]+'</span><span class="dd">'+d.getDate()+'</span>';
+    chip.onclick = function(){ document.querySelectorAll('.date-chip').forEach(c=>c.classList.remove('active')); this.classList.add('active'); };
+    strip.appendChild(chip);
+  }
+}
+
+// ===================== HOME =====================
+function setHomeDate() {
+  document.getElementById('homeDate').textContent = DAYS[today.getDay()]+', '+MONTHS[today.getMonth()]+' '+today.getDate()+', '+today.getFullYear();
+}
+
+function setDailyQuote() {
+  const q = QUOTES[today.getDate() % QUOTES.length];
+  document.getElementById('dailyQuote').textContent = '"'+q+'"';
+}
+
+function updateHomePriorities() {
+  document.getElementById('hp1').textContent = document.getElementById('p1').value || '—';
+  document.getElementById('hp2').textContent = document.getElementById('p2').value || '—';
+  document.getElementById('hp3').textContent = document.getElementById('p3').value || '—';
+}
+
+function updateHomeOneThing() {
+  document.getElementById('homeOneThing').textContent = document.getElementById('ot1').value || '—';
+}
+
+function updateProgress() {
+  const cleanItems = document.querySelectorAll('#dailyClean .check-item');
+  const cleanDone = document.querySelectorAll('#dailyClean .check-item.done');
+  const cleanPct = cleanItems.length ? Math.round(cleanDone.length/cleanItems.length*100) : 0;
+  document.getElementById('cleanPct').textContent = cleanPct+'%';
+  document.getElementById('cleanBar').style.width = cleanPct+'%';
+
+  const selfItems = document.querySelectorAll('#selfCareList .sc-row');
+  const selfDone = document.querySelectorAll('#selfCareList .sc-row.done');
+  const selfPct = selfItems.length ? Math.round(selfDone.length/selfItems.length*100) : 0;
+  document.getElementById('selfPct').textContent = selfPct+'%';
+  document.getElementById('selfBar').style.width = selfPct+'%';
+
+  const movItems = document.querySelectorAll('#movementList .sc-row');
+  const movDone = document.querySelectorAll('#movementList .sc-row.done');
+  const movPct = movItems.length ? Math.round(movDone.length/movItems.length*100) : 0;
+  document.getElementById('movPct').textContent = movPct+'%';
+  document.getElementById('movBar').style.width = movPct+'%';
+}
+
+// ===================== TIME BLOCKS =====================
+function buildTimeBlocks() {
+  const hours = ['5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00'];
+  const container = document.getElementById('timeBlocks');
+  container.innerHTML = '';
+  hours.forEach((h,i) => {
+    const row = document.createElement('div');
+    row.className = 'time-block';
+    const lbl = document.createElement('div');
+    lbl.className = 'time-label';
+    lbl.textContent = (i < 7 ? 'am' : i === 7 ? 'pm' : 'pm').replace('am','').replace('pm','');
+    lbl.textContent = h;
+    const inp = document.createElement('input');
+    inp.className = 'block-input';
+    inp.placeholder = 'Add event...';
+    inp.setAttribute('data-hour', i);
+    inp.oninput = () => { document.getElementById('qTasks').textContent = document.querySelectorAll('.block-input').length - [...document.querySelectorAll('.block-input')].filter(x=>!x.value).length; };
+    row.appendChild(lbl);
+    row.appendChild(inp);
+    container.appendChild(row);
+  });
+}
+
+// ===================== DAILY CLEAN =====================
+function buildDailyClean() {
+  const items = ['Make beds','Load dishwasher','Pick up laundry','Wipe counters','Clean sink','Pick up clutter','Sweep floors','Take out trash','Put away toys','Sort mail'];
+  const container = document.getElementById('dailyClean');
+  container.innerHTML = '';
+  items.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'check-item';
+    div.innerHTML = '<div class="check-box"><span class="check-mark">✓</span></div><div class="check-text">'+item+'</div>';
+    div.onclick = function(){ this.classList.toggle('done'); updateProgress(); };
+    container.appendChild(div);
+  });
+}
+
+// ===================== SELF CARE =====================
+function buildSelfCare() {
+  const items = ['Morning gratitude','Drink 8 glasses of water','10 min walk outside','Read before bed'];
+  const container = document.getElementById('selfCareList');
+  container.innerHTML = '';
+  items.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'sc-row';
+    div.innerHTML = '<div class="sc-box">✓</div><div class="sc-label">'+item+'</div>';
+    div.onclick = function(){ this.classList.toggle('done'); updateProgress(); };
+    container.appendChild(div);
+  });
+}
+
+// ===================== MOVEMENT =====================
+function buildMovement() {
+  const items = ['Morning stretch','Walk / run','Yoga / pilates'];
+  const container = document.getElementById('movementList');
+  container.innerHTML = '';
+  items.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'sc-row';
+    div.innerHTML = '<div class="sc-box">✓</div><div class="sc-label">'+item+'</div>';
+    div.onclick = function(){ this.classList.toggle('done'); updateProgress(); };
+    container.appendChild(div);
+  });
+}
+
+// ===================== WEEKLY =====================
+function buildWeekRows() {
+  const container = document.getElementById('weekRows');
+  container.innerHTML = '';
+  const startOfWeek = new Date(today);
+  startOfWeek.setDate(today.getDate() - today.getDay() + 1);
+  ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].forEach((day,i) => {
+    const d = new Date(startOfWeek);
+    d.setDate(startOfWeek.getDate()+i);
+    const row = document.createElement('div');
+    row.className = 'week-row';
+    row.innerHTML = '<div><div class="week-day-label">'+day+'</div><div class="week-day-date">'+MONTHS[d.getMonth()].substring(0,3)+' '+d.getDate()+'</div></div><div><input class="input-line" placeholder="Add event..." style="margin-bottom:4px"><input class="input-line" placeholder="Add event..."></div>';
+    container.appendChild(row);
+  });
+}
+
+function buildWeeklyClean() {
+  const items = ['Wash / change sheets','Wet mop floors','Laundry','Clean toilets','Vacuum floors','Bathroom sinks','Wash towels / bath rugs','Bathtub'];
+  const container = document.getElementById('weeklyClean');
+  container.innerHTML = '';
+  items.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'wclean-item sc-row';
+    div.innerHTML = '<div class="sc-box">✓</div><div class="sc-label">'+item+'</div>';
+    div.onclick = function(){ this.classList.toggle('done'); };
+    container.appendChild(div);
+  });
+}
+
+// ===================== CALENDAR =====================
+function buildCalendar() {
+  const cal = document.getElementById('calGrid');
+  cal.innerHTML = '';
+  ['S','M','T','W','T','F','S'].forEach(d=>{
+    const h = document.createElement('div');
+    h.className = 'cal-header';
+    h.textContent = d;
+    cal.appendChild(h);
+  });
+  const firstDay = new Date(today.getFullYear(),today.getMonth(),1).getDay();
+  const daysInMonth = new Date(today.getFullYear(),today.getMonth()+1,0).getDate();
+  for(let i=0;i<firstDay;i++){ const e=document.createElement('div'); e.className='cal-cell'; cal.appendChild(e); }
+  for(let d=1;d<=daysInMonth;d++){
+    const e = document.createElement('div');
+    e.className = 'cal-cell'+(d===today.getDate()?' today':'');
+    e.innerHTML = '<div class="cal-date">'+d+'</div>';
+    const day = d;
+    e.onclick = function(){
+      state.selectedCalDay = day;
+      document.getElementById('calNoteLabel').textContent = 'Note for '+MONTHS[today.getMonth()]+' '+day;
+      document.getElementById('calNoteBox').classList.remove('hidden');
+      document.getElementById('calNoteInput').value = state.calNotes[day] || '';
+      document.getElementById('calNoteInput').focus();
+    };
+    cal.appendChild(e);
+  }
+  document.getElementById('calNoteInput').oninput = function(){
+    if(state.selectedCalDay){ state.calNotes[state.selectedCalDay] = this.value; }
+  };
+}
+
+// ===================== MONTHLY TODOS =====================
+function buildMonthlyTodos() {
+  const container = document.getElementById('monthlyTodos');
+  container.innerHTML = '';
+  for(let i=1;i<=5;i++){
+    const row = document.createElement('div');
+    row.className = 'priority-row';
+    row.innerHTML = '<div class="priority-num">'+i+'.</div><input class="input-line" placeholder="Monthly to-do...">';
+    container.appendChild(row);
+  }
+}
+
+// ===================== REMINDERS =====================
+function buildReminders() {
+  const items = ['Time to size up baby clothes?','Time for a diaper re-order?','Phone a friend!','Delegate something!','Try a new self-care item!','Check in with bucket list'];
+  const container = document.getElementById('motherhoodReminders');
+  container.innerHTML = '';
+  items.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'reminder-item';
+    div.innerHTML = '<div class="reminder-check"><span class="r-mark">✓</span></div><div class="reminder-text">'+item+'</div>';
+    div.onclick = function(){ this.classList.toggle('done'); };
+    container.appendChild(div);
+  });
+}
+
+// ===================== MONTHLY CLEAN =====================
+function buildMonthlyClean() {
+  const items = ['Clean fridge','Wipe cabinets','Clean windows','Declutter cabinets','Wash trash cans','Wash pillows','Clean bath cabinets','Wash bath rugs'];
+  const container = document.getElementById('monthlyClean');
+  container.innerHTML = '';
+  items.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'check-item';
+    div.innerHTML = '<div class="check-box"><span class="check-mark">✓</span></div><div class="check-text">'+item+'</div>';
+    div.onclick = function(){ this.classList.toggle('done'); };
+    container.appendChild(div);
+  });
+}
+
+// ===================== MEALS =====================
+function buildMealTable() {
+  const table = document.getElementById('mealTable');
+  table.innerHTML = '';
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const meals = ['Breakfast','Lunch','Dinner','Snack'];
+  const header = document.createElement('tr');
+  header.innerHTML = '<th></th>'+meals.map(m=>'<th>'+m+'</th>').join('');
+  table.appendChild(header);
+  days.forEach(day => {
+    const row = document.createElement('tr');
+    let cells = '<td class="day-cell">'+day+'</td>';
+    meals.forEach(() => {
+      cells += '<td class="meal-cell"><input class="meal-input" placeholder="..."></td>';
+    });
+    row.innerHTML = cells;
+    table.appendChild(row);
+  });
+}
+
+// ===================== GROCERY =====================
+function buildGroceryList() {
+  const container = document.getElementById('groceryList');
+  container.innerHTML = '';
+  state.groceries.forEach(g => {
+    const div = document.createElement('div');
+    div.className = 'grocery-item'+(g.checked?' checked':'');
+    div.id = 'grocery-'+g.id;
+    div.innerHTML = '<div class="grocery-check-box" onclick="toggleGrocery('+g.id+')"><span class="grocery-check-mark">✓</span></div><div class="grocery-item-text">'+g.text+' <span class="grocery-item-cat">'+g.cat+'</span></div><button class="grocery-item-del" onclick="deleteGrocery('+g.id+')">×</button>';
+    container.appendChild(div);
+  });
+}
+
+function addGrocery() {
+  const input = document.getElementById('groceryInput');
+  const cat = document.getElementById('groceryCat').value;
+  if(!input.value.trim()) return;
+  state.groceries.push({id:state.groceryId++, text:input.value.trim(), cat, checked:false});
+  input.value = '';
+  buildGroceryList();
+}
+
+function toggleGrocery(id) {
+  const g = state.groceries.find(x=>x.id===id);
+  if(g){ g.checked = !g.checked; buildGroceryList(); }
+}
+
+function deleteGrocery(id) {
+  state.groceries = state.groceries.filter(x=>x.id!==id);
+  buildGroceryList();
+}
+
+// ===================== VISION BOARD =====================
+function buildVisionGrid() {
+  const grid = document.getElementById('visionGrid');
+  grid.innerHTML = '';
+  for(let i=0;i<6;i++){
+    const cell = document.createElement('div');
+    cell.className = 'vision-cell';
+    cell.textContent = '+ Add image';
+    grid.appendChild(cell);
+  }
+}
+
+// ===================== BUCKET LIST =====================
+function buildBucketList() {
+  const container = document.getElementById('bucketList');
+  container.innerHTML = '';
+  for(let i=1;i<=10;i++){
+    const div = document.createElement('div');
+    div.className = 'bucket-item';
+    div.innerHTML = '<div class="bucket-num">'+i+'</div><input class="bucket-input" placeholder="Add to your list..."><div class="bucket-check" onclick="toggleBucket(this)"><span class="bucket-check-mark">✓</span></div>';
+    container.appendChild(div);
+  }
+  document.getElementById('qBucket').textContent = '0';
+}
+
+function toggleBucket(el) {
+  const item = el.closest('.bucket-item');
+  item.classList.toggle('done');
+  document.getElementById('qBucket').textContent = document.querySelectorAll('#bucketList .bucket-item.done').length;
+}
+
+// ===================== NAV =====================
+function switchTab(name, el) {
+  document.querySelectorAll('[id^="tab-"]').forEach(t=>t.classList.add('hidden'));
+  document.getElementById('tab-'+name).classList.remove('hidden');
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function switchTabDirect(name) {
+  const tabs = ['home','daily','weekly','monthly','meals','reflect','more'];
+  const navTabs = document.querySelectorAll('.nav-tab');
+  document.querySelectorAll('[id^="tab-"]').forEach(t=>t.classList.add('hidden'));
+  document.getElementById('tab-'+name).classList.remove('hidden');
+  navTabs.forEach((t,i)=>{ if(tabs[i]===name) t.classList.add('active'); else t.classList.remove('active'); });
+}
+
+function showFab() {
+  const currentTab = [...document.querySelectorAll('[id^="tab-"]')].find(t=>!t.classList.contains('hidden'));
+  if(currentTab && currentTab.id === 'tab-daily'){
+    const firstEmpty = [...document.querySelectorAll('.block-input')].find(i=>!i.value);
+    if(firstEmpty) firstEmpty.focus();
+  }
+}
+
+// ===================== PRICING TOGGLE =====================
+setPricing('yearly');
+</script>
+</body>
+</html>
